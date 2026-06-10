@@ -345,11 +345,12 @@ def _find_latest_training_info() -> dict | None:
 
 
 def _load_metrics() -> dict | None:
-    """加载 eval_output/metrics.json。"""
-    metrics_path = _PROJECT_ROOT / "eval_output" / "metrics.json"
-    if metrics_path.exists():
-        with open(metrics_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+    """加载 eval_output/best/metrics.json，回退 baseline。"""
+    for sub in ["best", "baseline"]:
+        p = _PROJECT_ROOT / "eval_output" / sub / "metrics.json"
+        if p.exists():
+            with open(p, "r", encoding="utf-8") as f:
+                return json.load(f)
     return None
 
 
@@ -676,10 +677,6 @@ def api_data_viz_files():
 
     return {"files": files}
 
-
-# ============================================================
-# 静态文件挂载（必须在路由之后）
-# ============================================================
 
 # 评估图片 — baseline
 eval_baseline_dir = _PROJECT_ROOT / "eval_output" / "baseline"

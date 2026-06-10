@@ -246,12 +246,14 @@ TF 维度 Accuracy/F1/AUC 最均衡（最大面积），EI 的 F1 相对偏低�
 ### 启动服务
 
 ```bash
-# 默认 0.0.0.0:8000
+# 一键启动（自动打开浏览器）
 python api_server.py
 
-# 自定义端口
-python api_server.py --port 3000
+# 自定义端口 / 不打开浏览器
+python api_server.py --port 3000 --no-browser
 ```
+
+启动后自动：检测端口 → 加载模型到 GPU → 启动 FastAPI → 打开 `http://localhost:8000`
 
 ### 接口列表
 
