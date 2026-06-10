@@ -647,6 +647,36 @@ def api_best_config():
     raise HTTPException(status_code=404, detail="best_config.json 未找到")
 
 
+@app.get("/api/data-viz-files")
+def api_data_viz_files():
+    """返回 data_viz 目录下的文件列表，供前端动态加载。"""
+    data_viz_dir = _PROJECT_ROOT / "data_viz"
+    if not data_viz_dir.exists():
+        return {"files": []}
+
+    # 文件名 → 中文标签映射
+    label_map = {
+        "01_type_distribution.png": "MBTI 类型分布",
+        "02_dimension_distribution.png": "维度分布",
+        "03_text_length.png": "文本长度分布",
+        "04_train_test_split.png": "训练/测试集划分",
+        "05_keyword_comparison.png": "关键词对比",
+        "06_dimension_correlation.png": "维度相关性",
+    }
+
+    files = []
+    for f in sorted(data_viz_dir.iterdir()):
+        if f.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+            name = f.name
+            files.append({
+                "name": name,
+                "label": label_map.get(name, name.replace(".png", "").replace("_", " ").title()),
+                "url": f"/static/data_viz/{name}",
+            })
+
+    return {"files": files}
+
+
 # ============================================================
 # 静态文件挂载（必须在路由之后）
 # ============================================================
